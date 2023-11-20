@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>LinKasa</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      content="default-src 'self';
+      style-src 'self' 'unsafe-inline';
+      script-src 'self' https://identitytoolkit.googleapis.com;
+      connect-src 'self' https://identitytoolkit.googleapis.com;
+      "
+    />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
