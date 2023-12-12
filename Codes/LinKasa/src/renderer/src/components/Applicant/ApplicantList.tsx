@@ -61,7 +61,7 @@ function ApplicantList(){
 
   const acceptApplicant = async(applicant) => {
     try{
-      const userRef = doc(db, "users", applicant.userID);
+      const userRef = doc(db, "Users", applicant.userID);
       await updateDoc(userRef, { roles: applicant.role });
       const applicantRef = doc(db, "Applicant", applicant.id);
       await deleteDoc(applicantRef);

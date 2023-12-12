@@ -23,6 +23,7 @@ function MaintenanceScheduleForm() {
       birthdate: '',
       roles: '',
       profilePicture: '',
+      department: '',
     },
   };
 
@@ -31,7 +32,6 @@ function MaintenanceScheduleForm() {
   const [selectedType, setSelectedType] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [staffOptions, setStaffOptions] = useState<User[]>([])
-
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -91,8 +91,7 @@ function MaintenanceScheduleForm() {
 
   const getMaintenanceStaff = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'users'));
-
+      const querySnapshot = await getDocs(collection(db, 'Users'));
       const staffList = querySnapshot.docs
         .filter((doc) => doc.data().roles === 'Maintenance Staff')
         .map((doc) => {
@@ -104,6 +103,7 @@ function MaintenanceScheduleForm() {
             birthdate: data.birthdate,
             roles: data.roles,
             profilePicture: data.profilePicture,
+            department: data.department,
           };
         });
 
@@ -200,6 +200,7 @@ function MaintenanceScheduleForm() {
         birthdate: selectedStaff?.birthdate || '',
         roles: selectedStaff?.roles || '',
         profilePicture: selectedStaff?.profilePicture || '',
+        department: selectedStaff?.department || '',
       },
     }));
   };

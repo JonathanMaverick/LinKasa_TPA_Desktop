@@ -11,6 +11,7 @@ function AddLostItemForm(){
 
   const initialLostItem : LostAndFound = {
     id : '',
+    overview : '',
     description: '',
     photoUrl: '',
     status : '',
@@ -35,9 +36,10 @@ function AddLostItemForm(){
 
     try{
       await addDoc(lostAndFoundCollection, {
+        overview : lostItem.overview,
         description : lostItem.description,
         photoUrl : url,
-        status : 'lost'
+        status : 'unclaimed'
       });
       toast.success('🧢 Lost item added!', {
         position: "bottom-right",
@@ -83,19 +85,26 @@ function AddLostItemForm(){
       />
     )}
     <form ref={formRef} onSubmit={handeLostItem} className="flex flex-col mt-5 w-6/12 gap-2">
-    <label htmlFor="profile">Lost Item</label>
+    <label htmlFor="item">Lost Item</label>
       <input
-        id="profile"
+        id="item"
         type="file"
         accept=".jpg, .jpeg, .png"
         className="p-2"
         onChange={handleImagePreview}
         />
+      <label htmlFor="overview">Overview</label>
+      <input id="overview"
+          className="border p-2 rounded-lg focus:outline-none"
+          type="text"
+          value={lostItem.overview}
+          onChange={(e) => setLostItem({ ...lostItem, overview: e.target.value })}
+          />
       <label htmlFor="description">Description</label>
       <textarea
         id="description"
         rows={6}
-        className="p-2 resize-none"
+        className="border p-2 rounded-lg focus:outline-none resize-none"
         value={lostItem.description}
         onChange={(e) => {
           setLostItem({...lostItem, description : e.target.value});

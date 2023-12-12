@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import User from "@renderer/model/User";
 import SideBar from "@renderer/components/SideBar";
 import { useUserAuth } from "@renderer/library/UserAuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const initialEmployee: User = {
   documentId: '',
@@ -13,6 +15,7 @@ const initialEmployee: User = {
   birthdate: '',
   roles: '',
   profilePicture: '',
+  department: '',
 }
 
 function ViewEmployeeDetail() {
@@ -26,7 +29,7 @@ function ViewEmployeeDetail() {
         if (!userId) {
           return;
         }
-        const userDocRef = doc(db, 'users', userId);
+        const userDocRef = doc(db, 'Users', userId);
         const userDocSnapshot = await getDoc(userDocRef);
 
         if (userDocSnapshot.exists()) {
@@ -34,7 +37,7 @@ function ViewEmployeeDetail() {
           setEmployee(userData);
         }
       } catch (error) {
-
+        toast.error('Error fetching data');
       }
     };
 
@@ -56,10 +59,10 @@ function ViewEmployeeDetail() {
     try {
       const userDocRef = doc(db, 'users', userId);
       await deleteDoc(userDocRef);
-      alert("Employee deleted successfully");
+      toast.success('Data deleted successfully');
       navigate('/viewemployee');
     } catch (error) {
-      alert("Error occurred!");
+      toast.error('Error deleting data');
     }
   };
 
@@ -91,6 +94,7 @@ function ViewEmployeeDetail() {
         </>
         }
       </div>
+      <ToastContainer />
     </div>
     </>
   );

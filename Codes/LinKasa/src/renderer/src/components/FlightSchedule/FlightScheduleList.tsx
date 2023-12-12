@@ -1,13 +1,17 @@
 import { db } from "@renderer/config/firebase";
 import { useUserAuth } from "@renderer/library/UserAuthContext";
 import FlightSchedule from "@renderer/model/FlightSchedule";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast , ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function FlightScheduleList() {
   const [flightScheduleData, setFlightScheduleData] = useState<FlightSchedule[]>([]);
   const { roles } = useUserAuth();
-  const canSeeDetailButton = roles === "Chief Operation Officer (COO)" || roles === "Flight Operations Manager";
+  const navigate = useNavigate();
+  const canSeeDetailButton = roles === "Flight Operations Manager";
 
   function formatDateTime(dateTimeString: string) {
     const options: Intl.DateTimeFormatOptions = {
@@ -37,6 +41,7 @@ function FlightScheduleList() {
           pointsOrigin : data.pointsOrigin,
           pointsDestination : data.pointsDestination,
           status : data.status,
+          crewId : data.crewId,
         };
         return flightSchedule;
       });
@@ -49,17 +54,49 @@ function FlightScheduleList() {
     };
   },[]);
 
+  const handleDetailButtonClick = async(flightId) => {
+    navigate(`/updateFlightSchedule/${flightId}`);
+  }
+
+  const handleRemoveSchedule = async (flightId) => {
+    try{
+      const scheduleRef = doc(db, "FlightSchedule", flightId);
+      await deleteDoc(scheduleRef);
+      toast.success('✈️ Flight Schedule Removed!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }catch (error) {
+      toast.error('✈️ Failed to remove schedule!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Not Departed':
         return 'text-blue-600';
-      case 'delayed':
+      case 'Delayed':
         return 'text-yellow-500';
-      case 'arrived':
+      case 'Arrived':
         return 'text-green-600';
-      case 'in-transit':
-        return 'text-rose-600';
-      case 'cancelled':
+      case 'In-Transit':
+        return 'text-purple-600';
+      case 'Cancelled':
         return 'text-red-600';
       default:
         return '';
@@ -71,14 +108,21 @@ function FlightScheduleList() {
       <div>
         <p className="font-bold text-xl">{data.airplaneID}</p>
         <p>{`${data.pointsOrigin} - ${data.pointsDestination}`}</p>
-        <p className={`${getStatusColor(data.status)}`}>{data.status}</p>
         <p>{`${data.boardingTime} - ${data.arrivalTime}`}</p>
+        <p className={`${getStatusColor(data.status)}`}>{data.status}</p>
       </div>
       <div>
         {canSeeDetailButton && (
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer">
-            Detail
-          </button>
+          <div className="flex gap-2 mt-2">
+            <button onClick={() => handleDetailButtonClick(data.id)}
+            className="bg-yellow-500 text-white px-4 py-2 rounded-md cursor-pointer">
+              Detail
+            </button>
+            <button onClick={() => handleRemoveSchedule(data.id)}
+             className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer">
+              Remove
+            </button>
+          </div>
         )}
       </div>
     </div>
@@ -90,6 +134,7 @@ function FlightScheduleList() {
       <div className="bg-sky-200 mt-5 w-10/12">
         {flightScheduleData.map((schedule) => buildDiv(schedule))}
       </div>
+      <ToastContainer />
     </div>
   );
 }

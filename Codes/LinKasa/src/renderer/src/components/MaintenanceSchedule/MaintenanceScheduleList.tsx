@@ -1,8 +1,11 @@
-import { onSnapshot } from "firebase/firestore";
+import { deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import MaintenanceSchedule from "@renderer/model/MaintenanceSchedule";
 import { useNavigate } from "react-router-dom";
 import { maintenanceScheduleCollection } from "@renderer/library/Collection";
+import { db } from "@renderer/config/firebase";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MaintenanaceScheduleList() {
   const [maintenanceScheduleData, setMaintenanceScheduleData] = useState<MaintenanceSchedule[]>([]);
@@ -42,6 +45,7 @@ function MaintenanaceScheduleList() {
             birthdate: data.staff.birthdate || '',
             roles: data.staff.roles || '',
             profilePicture: data.staff.profilePicture || '',
+            department: data.staff.department || '',
           },
         };
         return maintenanceSchedule;
@@ -57,6 +61,24 @@ function MaintenanaceScheduleList() {
   const handleUpdate = (id) => {
     navigate(`/updateMaintenanceSchedule/${id}`);
   };
+
+  const handleDelete = async (id) => {
+    if(!id){
+      return;
+    }
+    const maintenanceScheduleDocRef = doc(db, 'MaintenanceSchedule', id);
+    await deleteDoc(maintenanceScheduleDocRef);
+    toast.success('🛠️ Maintenance Schedule deleted!', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      });
+  }
 
   const buildDiv = (data: MaintenanceSchedule) => {
     return (
@@ -84,13 +106,22 @@ function MaintenanaceScheduleList() {
           </div>
         </div>
         <p className="text-gray-600 mt-4">Staff: {data.staff.name}</p>
-        <button
-          onClick={() => handleUpdate(data.id)}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-700"
-        >
-          Update
-        </button>
+        <div className="flex flex-row gap-4">
+          <button
+            onClick={() => handleUpdate(data.id)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-700 w-full"
+          >
+            Update
+          </button>
+          <button
+            onClick={() => handleDelete(data.id)}
+            className="bg-red-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-red-600 focus:outline-none focus:ring focus:border-red-700 w-full"
+          >
+            Delete
+          </button>
+        </div>
       </div>
+      <ToastContainer />
       </div>
     );
   };

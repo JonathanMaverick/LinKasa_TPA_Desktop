@@ -8,6 +8,7 @@ import { toast , ToastContainer} from "react-toastify";
 import { applicantCollection } from "@renderer/library/Collection";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 function VacancyList()
 {
@@ -15,6 +16,7 @@ function VacancyList()
   const {roles, username} = useUserAuth();
   const isHRD = roles === "Human Resources Director";
   const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(vacancyCollection, (snapshot) => {
@@ -23,6 +25,8 @@ function VacancyList()
         const lostItem: Vacancy = {
           id : doc.id,
           role: data.role || '',
+          description: data.description || '',
+          salary: data.salary || 0,
         };
         return lostItem;
       });
@@ -120,19 +124,43 @@ function VacancyList()
     }
   }
 
+  const updateVacancy = async (vacancyId) => {
+    navigate(`/updateJobVacancy/${vacancyId}`)
+  }
+
   const buildDiv = (vacancy : Vacancy) => {
     return (
-      <div key={vacancy.id} className="bg-white p-6 rounded-md shadow-md mb-6">
-        <h1 className="text-xl font-bold mb-4">{vacancy.role}</h1>
-        {isHRD ? (
-          <button onClick={() => removeVacancy(vacancy.id)} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
-            Remove
-          </button>
-        ) :
-          <button onClick={() => applyVacancy(vacancy)} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-            Apply
-          </button>
-        }
+      <div key={vacancy.id} className="bg-white p-6 rounded-md shadow-md mb-4">
+        <h1 className="text-2xl font-bold mb-4">{vacancy.role}</h1>
+        <p className="text-gray-600 mb-2">{vacancy.description}</p>
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-gray-500 font-bold">Salary: {vacancy.salary}</span>
+          <div>
+          {isHRD ? (
+            <div className="flex gap-2">
+              <button
+              onClick={() => updateVacancy(vacancy.id)}
+              className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
+              >
+                Update
+              </button>
+              <button
+                onClick={() => removeVacancy(vacancy.id)}
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                >
+                Remove
+              </button>
+            </div>
+            ) : (
+            <button
+            onClick={() => applyVacancy(vacancy)}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              Apply
+            </button>
+          )}
+          </div>
+        </div>
       </div>
     );
   };

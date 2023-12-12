@@ -7,6 +7,7 @@ interface FlightSchedule {
   pointsOrigin : string;
   pointsDestination : string;
   status: string,
+  crewId: string,
 }
 
 export default FlightSchedule;

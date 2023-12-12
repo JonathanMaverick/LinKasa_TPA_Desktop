@@ -17,6 +17,7 @@ function RegisterForm(){
     birthdate: '',
     roles: '',
     profilePicture: '',
+    department: '',
   }
 
   const [passenger, setPassenger] = useState<User>(initialPassenger);

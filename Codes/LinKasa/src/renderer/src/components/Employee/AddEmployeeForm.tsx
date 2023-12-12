@@ -16,6 +16,7 @@ function addEmployeeForm(){
     birthdate: '',
     roles: '',
     profilePicture: '',
+    department: '',
   }
 
   const [employee, setEmployee] = useState<User>(initialEmployee);
@@ -30,16 +31,17 @@ function addEmployeeForm(){
     "Lost and Found Staff",
     "Check-in Staff",
     "Gate Agents",
-    "Air Operations Manager",
+    "Airport Operations Manager",
     "Flight Operations Manager",
     "Ground Handling Manager",
     "Ground Handling Staff",
     "Landside Operations Manager",
+    "Landside Operations Staff",
     "Maintenance Manager",
     "Maintenance Staff",
     "Customs and Border Control Officers",
     "Baggage Security Supervisor",
-    "Baggage Security Staff",
+    "Baggage Handling Staff",
     "Cargo Manager",
     "Logistic Manager",
     "Fuel Manager",
@@ -80,6 +82,41 @@ function addEmployeeForm(){
       return;
     }
 
+    if (employee.roles === "Customer Service Manager"
+    || employee.roles === "Information Desk Staff"
+    || employee.roles === "Lost and Found Staff"
+    || employee.roles === "Check-in Staff"
+    || employee.roles === "Gate Agents") {
+      employee.department = "Customer Service and Passenger Assistance";
+    }
+    else if (employee.roles === "Airport Operations Manager"
+    || employee.roles === "Flight Operations Manager"
+    || employee.roles === "Ground Handling Manager"
+    || employee.roles == "Ground Handling Staff"
+    || employee.roles === "Landside Operations Manager"
+    || employee.roles === "Landside Operations Staff"
+    || employee.roles === "Maintenance Manager"
+    || employee.roles === "Maintenance Staff") {
+      employee.department  = "Operations and Coordination";
+    } else if (employee.roles === "Customs and Border Control Officers"
+    || employee.roles === "Baggage Security Supervisor"
+    || employee.roles === "Baggage Handling Staff") {
+      employee.department = "Security and Safety";
+    } else if (employee.roles === "Cargo Manager"
+    || employee.roles === "Fuel Manager"
+    || employee.roles === "Logistic Manager"
+    || employee.roles === "Cargo Handlers"){
+      employee.department = "Logistics, Cargo, and Supply Chain";
+    } else if(employee.roles === "Civil Engineering Manager"){
+      employee.department = "Engineering and Maintenance";
+    } else if (employee.roles === "Airport Director/CEO"
+    || employee.roles === "Chief Financial Officer (CFO)"
+    || employee.roles === "Chief Operation Officer (COO)"
+    || employee.roles === "Chief Security Officer (CSO)"
+    || employee.roles === "Human Resources Director"){
+      employee.department = "Executive Level";
+    }
+
     try{
       const newUser = await createUserWithEmailAndPassword(auth, employee.email, password);
       const imageRef = ref(storage, `profile/${profilePicture.name}`);
@@ -93,7 +130,8 @@ function addEmployeeForm(){
         email: employee.email,
         roles: employee.roles,
         profilePicture: url,
-        birthdate: employee.birthdate
+        birthdate: employee.birthdate,
+        department : employee.department
       });
 
       setEmployee(initialEmployee);

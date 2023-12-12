@@ -23,6 +23,7 @@ function UpdateMaintenanceSchedule() {
       birthdate: '',
       roles: '',
       profilePicture: '',
+      department: '',
     },
   };
 
@@ -57,13 +58,13 @@ function UpdateMaintenanceSchedule() {
 
   const getMaintenanceStaff = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'users'));
+      const querySnapshot = await getDocs(collection(db, 'Users'));
 
       return querySnapshot.docs
         .filter((doc) => doc.data().roles === 'Maintenance Staff')
         .map((doc) => {
-          const { email, name, birthdate, roles, profilePicture } = doc.data();
-          return { documentId: doc.id, email, name, birthdate, roles, profilePicture };
+          const { email, name, birthdate, roles, profilePicture, department } = doc.data();
+          return { documentId: doc.id, email, name, birthdate, roles, profilePicture, department };
         });
     } catch (error) {
       return [];
@@ -157,6 +158,7 @@ function UpdateMaintenanceSchedule() {
         birthdate: selectedStaff?.birthdate || '',
         roles: selectedStaff?.roles || '',
         profilePicture: selectedStaff?.profilePicture || '',
+        department: selectedStaff?.department || ''
       },
     }));
   };

@@ -28,6 +28,11 @@ function HRDComponent(){
         View Applicant
       </button>
     </Link>
+    <Link to="/assignStaffTraining">
+      <button className="w-36 h-10 bg-white rounded-md mt-5">
+        Assign Staff Training
+      </button>
+    </Link>
     </>
   )
 }

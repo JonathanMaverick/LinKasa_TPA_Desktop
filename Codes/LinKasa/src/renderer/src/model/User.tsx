@@ -5,6 +5,7 @@ interface User {
   birthdate: string;
   roles: string;
   profilePicture: string;
+  department: string;
 }
 
 export default User;

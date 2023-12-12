@@ -1,16 +1,16 @@
-import { db } from "@renderer/config/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import User from "@renderer/model/User";
 import { useNavigate } from "react-router-dom";
+import { userCollection } from "@renderer/library/Collection";
 
 function EmployeeList() {
   const [userData, setUserData] = useState<User[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+    const unsubscribe = onSnapshot(userCollection, (snapshot) => {
       const updatedData = snapshot.docs.map(doc => {
         const data = doc.data();
         const user: User = {
@@ -20,9 +20,11 @@ function EmployeeList() {
           birthdate: data.birthdate || '',
           profilePicture: data.profilePicture || '',
           email: data.email || '',
+          department: data.department || '',
         };
         return user;
-      });
+      })
+      .filter(user => user.roles !== 'Passenger');
 
       setUserData(updatedData);
     });

@@ -5,7 +5,7 @@ function ViewLostItem()
 {
   return (
     <>
-      <div className='flex bg-sky-200 w-full h-screen'>
+      <div className='flex bg-sky-200'>
         <SideBar />
         <LostItemList />
       </div>

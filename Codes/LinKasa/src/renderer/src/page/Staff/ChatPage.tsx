@@ -1,6 +1,15 @@
+import Chat from "@renderer/components/Chat/Chat";
+import SideBar from "@renderer/components/SideBar";
+
+
 function ChatPage (){
   return (
-    <h1>Chat World</h1>
+    <>
+    <div className="flex">
+      <SideBar />
+      <Chat />
+    </div>
+    </>
   )
 }
 

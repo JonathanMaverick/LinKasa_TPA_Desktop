@@ -13,8 +13,11 @@ import ChiefFinancialOfficerComponent from "./SideBarComponent/ChiefFinancialOff
 import MaintenanceManagerComponent from "./SideBarComponent/MaintenanceManagerComponent";
 import GroundHandlingManagerComponent from "./SideBarComponent/GroundHandlingManagerComponent";
 import PassengerComponent from "./SideBarComponent/PassengerComponent";
+import FlightOperationManager from "./SideBarComponent/FlightOperationManagerComponent";
+import GroundHandlingStaffComponent from "./SideBarComponent/GroundHandlingStaffComponent";
 import { auth } from "@renderer/config/firebase";
 import { useAuthState } from 'react-firebase-hooks/auth';
+import CheckInStaffComponent from "./SideBarComponent/CheckInStaffComponent";
 
 function SideBar()
 {
@@ -29,6 +32,9 @@ function SideBar()
   const isChiefFinancialOfficer = roles === "Chief Financial Officer (CFO)";
   const isMaintenanceManager = roles === "Maintenance Manager";
   const isGroundHandlingManager = roles === "Ground Handling Manager";
+  const isGroundHandlingStaff = roles === "Ground Handling Staff";
+  const isFlightOperationsManager = roles === "Flight Operations Manager";
+  const isCheckInStaff = roles === "Check-in Staff";
   const isNotPassenger = roles !== "Passenger";
   const isPassenger = roles === "Passenger";
 
@@ -67,6 +73,9 @@ function SideBar()
         {isChiefFinancialOfficer && <ChiefFinancialOfficerComponent />}
         {isMaintenanceManager && <MaintenanceManagerComponent />}
         {isGroundHandlingManager && <GroundHandlingManagerComponent />}
+        {isFlightOperationsManager && <FlightOperationManager />}
+        {isCheckInStaff && <CheckInStaffComponent />}
+        {isGroundHandlingStaff && <GroundHandlingStaffComponent />}
         {isNotPassenger && <StaffComponent />}
         {isPassenger && <PassengerComponent />}
       </div>

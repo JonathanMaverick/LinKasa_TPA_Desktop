@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [errorMessage, setError] = useState('');
   const [username,setUsername] = useState('');
   const [roles, setRoles] = useState('');
+  const [department, setDepartment] = useState('');
   const navigate = useNavigate();
 
   const auth = getAuth();
@@ -20,9 +21,10 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const userData = await getDoc(doc(db, 'users', user.uid));
+          const userData = await getDoc(doc(db, 'Users', user.uid));
           setUsername(userData.data()?.name);
           setRoles(userData.data()?.roles);
+          setDepartment(userData.data()?.department);
           navigate('/home');
         } catch (error) {
           setError('Error fetching user data');
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }) => {
        username,
        errorMessage,
        roles,
+       department,
        login,
        logout
       }}

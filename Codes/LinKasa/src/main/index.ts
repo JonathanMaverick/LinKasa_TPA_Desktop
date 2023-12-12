@@ -118,7 +118,7 @@ app.whenReady().then(() => {
     hideWindow();
   });
 
-  globalShortcut.register('CommandOrControl+F', () => {
+  globalShortcut.register('CommandOrControl+F+D', () => {
     maximizeWindow();
   });
 

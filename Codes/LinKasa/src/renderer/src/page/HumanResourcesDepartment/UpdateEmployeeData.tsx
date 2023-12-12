@@ -6,17 +6,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import SideBar from "@renderer/components/SideBar";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
-const initialEmployee: User = {
-  documentId: '',
-  email: '',
-  name: '',
-  birthdate: '',
-  roles: '',
-  profilePicture: '',
-}
-
 function UpdateEmployeeDetail(){
 
+  const initialEmployee: User = {
+    documentId: '',
+    email: '',
+    name: '',
+    birthdate: '',
+    roles: '',
+    profilePicture: '',
+    department: '',
+  }
+  
   const roles = [
     "Customer Service Manager",
     "Information Desk Staff",
@@ -57,7 +58,7 @@ function UpdateEmployeeDetail(){
       if (!userId) {
         return;
       }
-      const userDocRef = doc(db, 'users', userId);
+      const userDocRef = doc(db, 'Users', userId);
       const userDocSnapshot = await getDoc(userDocRef);
 
       if (userDocSnapshot.exists()) {
@@ -91,7 +92,7 @@ function UpdateEmployeeDetail(){
         url = await getDownloadURL(imageRef);
       }
 
-      const userDocRef = doc(db, 'users', userId)
+      const userDocRef = doc(db, 'Users', userId)
 
       setDoc(userDocRef, {
         name : employee.name,
